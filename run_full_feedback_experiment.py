@@ -13,9 +13,9 @@ parser.add_argument('--payoff', default='payoff/biased_rsp.csv', type=str, help=
 parser.add_argument('--n_p', '--n_processes', type=int, default=1, help="number of process different seed")
 parser.add_argument('--n_i', '--n_iterations', type=int, default=1000, help='number of iterations (default: 1000)')
 parser.add_argument('--update_freq', '--uf', type=int, default=0, help='update frequency of reference strategy')
-parser.add_argument('--arch', type=str, default=MFTRL, choices=['ftrl', 'oftrl', 'mftrl'])
+parser.add_argument('--arch', type=str, default='mftrl', choices=['ftrl', 'oftrl', 'mftrl'])
 parser.add_argument('--mu', type=float, default=0.01, help='mutation rate')
-parser.add_argument('--eta', type=float, default=1e-4, help='learning rate')
+parser.add_argument('--eta', type=float, default=0.1, help='learning rate')
 parser.add_argument('--outdir', type=str, default='results', help='Directory path to save output files. If it does not exist, it will be created.')
 parser.add_argument('--dir_suffix', type=str, help='Directory suffix to save output files')
 parser.add_argument('--r_p', '--random_payoff', action='store_true', help='random payoff')
@@ -68,7 +68,7 @@ def run(inputs):
         agents=agents,
         n_iterations=args.n_i,
         logger=logger_,
-        feedback='bandit',
+        feedback='full',
         random_policy=args.r_i_p
     )
     print('Finish seed {}'.format(process_idx))
@@ -82,7 +82,7 @@ if __name__ == "__main__":
         payoff = args.payoff
         payoff = payoff.replace('.csv', '')
     payoff = payoff.replace('/', '_')
-    args.dir_name = 'arch_{}_{}_feedback_{}_{}'.format(args.arch, payoff, 'bandit', args.dir_suffix)
+    args.dir_name = 'arch_{}_{}_feedback_{}_{}'.format(args.arch, payoff, 'full', args.dir_suffix)
     args.outdir = utils.prepare_output_dir(args, args.outdir)
     utils.set_random_seed(args.seed)
 

@@ -18,7 +18,7 @@ $ pip install -r requirements.txt
 ## Run Experiments
 In order to investigate the performance of M-FTRL in biased Rock-Paper-Scissors under full-information feedback, execute the following command:
 ```bash
-$ python run_full_information_feedback_experiment.py
+$ python run_full_feedback_experiment.py
 ```
 
 To evaluate M-FTRL via an experiment in biased Rock-Paper-Scissors under bandit feedback, execute the following command:

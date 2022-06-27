@@ -1,7 +1,5 @@
 import numpy as np
-from abc import ABCMeta, abstractmethod
-from visualization.result_summary import calc_equilibrium_point
-import time
+
 
 class MatrixGame(object):
     def __init__(self, payoff):
@@ -20,5 +18,5 @@ class MatrixGame(object):
     def calc_exploitability(self, strategies):
         return max(self.payoff @ strategies[1]) + max(-self.payoff.T @ strategies[0])
 
-    def n_actions_tuple(self):
-        return (self.payoff.shape[0], self.payoff.shape[1])
+    def num_actions(self, player_id):
+        return self.payoff.shape[player_id]
