@@ -23,5 +23,5 @@ $ python run_experiment.py
 
 To evaluate M-FTRL via an experiment in biased Rock-Paper-Scissors under bandit feedback, execute the following command:
 ```bash
-$ python run_bandit_feedback_experiment.py
+$ python run_experiment.py --feedback=bandit
 ```

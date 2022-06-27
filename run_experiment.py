@@ -35,7 +35,7 @@ def run_exp(num_trials, game, T, seed, feedback, algs):
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument('--game', default='biased_rsp', type=str,
+    parser.add_argument('--game', default='biased_rps', type=str,
                         choices=['biased_rps', 'm_eq', *['random_utility/size{}'.format(s) for s in [2, 3, 5, 10, 50, 100]]], help='name of game')
     parser.add_argument('--num_trials', type=int, default=1, help="number of trials to run experiments")
     parser.add_argument('--T', type=int, default=1000, help='number of iterations')
@@ -53,7 +53,7 @@ def main():
 
     # run experiments
     print('==========Run experiment over {} trials=========='.format(args.num_trials))
-    run_exp(args.num_trials, args.game, args.T, args.seed, 'full', algs)
+    run_exp(args.num_trials, args.game, args.T, args.seed, args.feedback, algs)
 
 
 if __name__ == "__main__":
