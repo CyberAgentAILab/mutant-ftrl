@@ -1,11 +1,13 @@
 import numpy as np
 
 from games.matrix_game import MatrixGame
-from logger import FTRLTrajectoryLogger
+from runner.plotter import Plotter
 from runner import utils
+from runner.logger import Logger
 
 
 def run_ftrl(trial_id, game, T, feedback, alg, params, dir_name):
+    # set random seed
     utils.set_random_seed(trial_id)
 
     # initialize game and players
@@ -15,42 +17,37 @@ def run_ftrl(trial_id, game, T, feedback, alg, params, dir_name):
         alg(game.num_actions(1), **params)
     ]
 
-    logger = FTRLTrajectoryLogger(dir_name, trial_id)
-    trajectories = [[] for _ in players]
-    time_average_trajectories = [[] for _ in players]
-    exploitabilities = []
-    time_average_exploitabilities = []
-    index = []
-    for i_t in np.arange(0, T + 1):
+    logger = Logger()
+    plotter = Plotter(dir_name, trial_id)
+    for i_t in np.arange(T + 1):
         if feedback == 'full':
-            policies = [agent.policy for agent in players]
+            policies = [player.policy for player in players]
             utilities = game.full_feedback(policies)
-            for i_a, agent in enumerate(players):
-                agent.update(utilities[i_a])
+            for i_a, player in enumerate(players):
+                player.update(utilities[i_a])
         elif feedback == 'bandit':
-            policies = [agent.policy for agent in players]
+            policies = [player.policy for player in players]
             utilities, actions = game.bandit_feedback(policies)
-            for i_a, agent in enumerate(players):
-                agent.update_bandit(utilities[i_a], actions[i_a])
+            for i_a, player in enumerate(players):
+                player.update_bandit(utilities[i_a], actions[i_a])
         else:
             raise RuntimeError('illegal feedback type')
-        index.append(i_t)
-        for i_a, agent in enumerate(players):
-            trajectories[i_a].append(agent.policy.copy())
-            time_average_trajectories[i_a].append(agent.time_average_policy.copy())
-            time_average_policies = [agent.time_average_policy for agent in players]
-        exploitabilities.append(game.calc_exploitability(policies))
-        time_average_exploitabilities.append(game.calc_exploitability(time_average_policies))
+        for p in range(len(players)):
+            logger['player{}_strategy'.format(p)].append(players[p].policy.copy())
+            logger['player{}_average_strategy'.format(p)].append(players[p].time_average_policy.copy())
+        time_average_policies = [player.time_average_policy for player in players]
+        logger['last_iterate_exploitability'].append(game.calc_exploitability(policies))
+        logger['time_average_exploitability'].append(game.calc_exploitability(time_average_policies))
         if i_t > 0 and i_t % int(10e5) == 0:
-            logger.write_trajectories(trajectories, index)
-            logger.write_time_avarage_trajectoies(time_average_trajectories, index)
-            logger.write_exploitabilities(exploitabilities, index)
-            logger.write_time_average_exploitabilities(time_average_exploitabilities, index)
+            plotter.write_trajectories([logger['player{}_strategy'.format(p)] for p in range(len(players))])
+            plotter.write_time_avarage_trajectoies([logger['player{}_average_strategy'.format(p)] for p in range(len(players))])
+            plotter.write_exploitabilities(logger['last_iterate_exploitability'])
+            plotter.write_time_average_exploitabilities(logger['time_average_exploitability'])
             if trial_id % 10 == 0:
                 print('p_id', trial_id, ":", i_t, "iterations finished.")
-    logger.write_trajectories(trajectories, index)
-    logger.write_time_avarage_trajectoies(time_average_trajectories, index)
-    logger.write_exploitabilities(exploitabilities, index)
-    logger.write_time_average_exploitabilities(time_average_exploitabilities, index)
+    plotter.write_trajectories([logger['player{}_strategy'.format(p)] for p in range(len(players))])
+    plotter.write_time_avarage_trajectoies([logger['player{}_average_strategy'.format(p)] for p in range(len(players))])
+    plotter.write_exploitabilities(logger['last_iterate_exploitability'])
+    plotter.write_time_average_exploitabilities(logger['time_average_exploitability'])
     print('Finish seed {}'.format(trial_id))
     return players

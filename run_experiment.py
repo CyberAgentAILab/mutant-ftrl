@@ -20,7 +20,7 @@ def run_exp(num_trials, game, T, seed, feedback, algs):
             os.makedirs(dir_name + '/csv')
             os.makedirs(dir_name + '/figure')
 
-        # sed random seed
+        # set random seed
         utils.set_random_seed(seed)
 
         # run each algorithm
