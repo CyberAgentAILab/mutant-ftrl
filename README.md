@@ -3,8 +3,8 @@ Code for reproducing results in the paper "Mutation-Driven Follow the Regularize
 
 ## About
 In this study, we consider a variant of the Follow the Regularized Leader (FTRL) dynamics in two-player zero-sum games.
-FTRL is guaranteed to converge to a Nash equilibrium when time-averaging the strategies, while many variants suffer from the issue of limit cycling behavior, i.e., lack the last-iterate convergence guarantee.
-To resolve this issue, we propose a mutation-driven FTRL (M-FTRL), an algorithm that introduces mutation for the perturbation of action probabilities.
+FTRL is guaranteed to converge to a Nash equilibrium when time-averaging the strategies, while a lot of variants suffer from the issue of limit cycling behavior, i.e., lack the last-iterate convergence guarantee.
+To this end, we propose mutant FTRL (M-FTRL), an algorithm that introduces mutation for the perturbation of action probabilities.
 We then investigate the continuous-time dynamics of M-FTRL and provide the strong convergence guarantees toward stationary points that approximate Nash equilibria under full-information feedback.
 Furthermore, our simulation demonstrates that M-FTRL can enjoy faster convergence rates than FTRL and optimistic FTRL under full-information feedback and surprisingly exhibits clear convergence under bandit feedback.
 
