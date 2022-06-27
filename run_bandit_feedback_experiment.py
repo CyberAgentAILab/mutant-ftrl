@@ -6,20 +6,20 @@ import time
 from algorithms import *
 from games import matrix_game
 from runner import utils
-from runner.ftrl_runner import run_ftrl
+from runner.runner import run_ftrl
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--payoff', default='payoff/biased_rsp.csv', type=str, help='payoff csv file path using single population')
 parser.add_argument('--n_p', '--n_processes', type=int, default=1, help="number of process different seed")
 parser.add_argument('--n_i', '--n_iterations', type=int, default=1000, help='number of iterations (default: 1000)')
 parser.add_argument('--update_freq', '--uf', type=int, default=0, help='update frequency of reference strategy')
-parser.add_argument('--arch', type=str, default=MFTRL, choices=['ftrl', 'oftrl', 'mftrl'])
+parser.add_argument('--alg', type=str, default=MFTRL, choices=['ftrl', 'oftrl', 'mftrl'])
 parser.add_argument('--mu', type=float, default=0.01, help='mutation rate')
 parser.add_argument('--eta', type=float, default=1e-4, help='learning rate')
 parser.add_argument('--outdir', type=str, default='results', help='Directory path to save output files. If it does not exist, it will be created.')
 parser.add_argument('--dir_suffix', type=str, help='Directory suffix to save output files')
 parser.add_argument('--r_p', '--random_payoff', action='store_true', help='random payoff')
-parser.add_argument('--r_i_p', '--random_init_policy', action='store_true', help='random random policy')
+parser.add_argument('--r_i_p', '--random_init_policy', action='store_true', help='Whether to initialize the initial strategy randomly')
 parser.add_argument('--size', type=int, default=2, choices=(2, 3, 5, 10, 50, 100), help='random payoff size')
 parser.add_argument('--seed', type=int, default=0, help="random seed")
 
@@ -28,7 +28,7 @@ def main(args):
     if args.r_p:
         payoffs = utils.load_payoff_all_arrays('payoff/size_{}'.format(args.size))
     else:
-        payoff = utils.load_payoff_array(args.payoff)
+        payoff = utils.load_utility_matrix(args.utility)
         payoffs = [payoff] * args.n_p
 
     inputList = [(p_id, args, payoffs[p_id]) for p_id in range(args.n_p)]
@@ -39,20 +39,20 @@ def main(args):
 
 def run(inputs):
     process_idx, args, payoff = inputs
-    utils.save_payoff_array('{}/csv/seed_{}_payoff.csv'.format(args.outdir, process_idx), payoff)
+    utils.save_utility_matrix('{}/csv/seed_{}_payoff.csv'.format(args.outdir, process_idx), payoff)
     game = matrix_game.MatrixGame(payoff)
 
-    if args.arch == 'ftrl':
+    if args.alg == 'ftrl':
         agents = [
             FTRL(args.eta, game.num_actions(0)),
             FTRL(args.eta, game.num_actions(1))
         ]
-    elif args.arch == 'oftrl':
+    elif args.alg == 'oftrl':
         agents = [
             OFTRL(args.eta, game.num_actions(0)),
             OFTRL(args.eta, game.num_actions(1))
         ]
-    elif args.arch == 'mftrl':
+    elif args.alg == 'mftrl':
         agents = [
             MFTRL(args.eta, game.num_actions(0), args.mu, update_freq=args.update_freq),
             MFTRL(args.eta, game.num_actions(1), args.mu, update_freq=args.update_freq),
@@ -82,7 +82,7 @@ if __name__ == "__main__":
         payoff = args.payoff
         payoff = payoff.replace('.csv', '')
     payoff = payoff.replace('/', '_')
-    args.dir_name = 'arch_{}_{}_feedback_{}_{}'.format(args.arch, payoff, 'bandit', args.dir_suffix)
+    args.dir_name = 'alg_{}_{}_feedback_{}_{}'.format(args.alg, payoff, 'bandit', args.dir_suffix)
     args.outdir = utils.prepare_output_dir(args, args.outdir)
     utils.set_random_seed(args.seed)
 

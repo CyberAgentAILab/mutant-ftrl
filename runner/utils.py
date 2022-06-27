@@ -1,40 +1,10 @@
-import argparse
-import json
 import os
 import subprocess
-import sys
 import warnings
 import multiprocessing as mp
 import numpy as np
 import random
 import glob
-
-
-def prepare_output_dir(args, user_specified_dir, argv=None):
-    if os.path.exists(user_specified_dir):
-        if not os.path.isdir(user_specified_dir):
-            raise RuntimeError(
-                '{} is not a directory'.format(user_specified_dir))
-    outdir = os.path.join(user_specified_dir, args.dir_name)
-    if not os.path.exists(outdir):
-        os.makedirs(outdir)
-        os.makedirs(outdir + '/csv')
-        os.makedirs(outdir + '/figure')
-    result_summary_path = "{}/result_summary.txt".format(user_specified_dir)
-
-    with open(result_summary_path, 'a') as f:
-        if argv is None:
-            argv = sys.argv
-        s = '\n' + ' '.join(argv) + ' ' + str(outdir)
-        f.write(s)
-
-    # Save all the arguments
-    with open(os.path.join(outdir, 'args.txt'), 'w') as f:
-        if isinstance(args, argparse.Namespace):
-            args = vars(args)
-        f.write(json.dumps(args))
-
-    return outdir
 
 
 def is_return_code_zero(args):
@@ -109,16 +79,16 @@ def get_cpu_count():
     return mp.cpu_count()
 
 
-def load_payoff_array(payoff_path):
-    return np.loadtxt(payoff_path, delimiter=',')
+def load_utility_matrix(game, num_trials):
+    if 'random_utility' in game:
+        utilities = []
+        for file in glob.glob("utility/{}/*".format(game)):
+            utilities.append(np.loadtxt(file, delimiter=','))
+    else:
+        utility = np.loadtxt('utility/{}.csv'.format(game), delimiter=',')
+        utilities = [utility] * num_trials
+    return utilities
 
 
-def load_payoff_all_arrays(payoff_path):
-    payoffs = []
-    for payoff_file in glob.glob("{}/*".format(payoff_path)):
-        payoffs.append(np.loadtxt(payoff_file, delimiter=','))
-    return payoffs
-
-
-def save_payoff_array(file_name, payoff):
-    np.savetxt(file_name, payoff, fmt='%.8f', delimiter=',')
+def save_utility_matrix(file_name, utility):
+    np.savetxt(file_name, utility, fmt='%.8f', delimiter=',')

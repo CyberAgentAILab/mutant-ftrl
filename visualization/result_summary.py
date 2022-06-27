@@ -8,14 +8,14 @@ import nashpy
 import collections
 
 
-def calc_lines_end_points(payoff):
+def calc_lines_end_points(utility):
     lines_end_points = []
-    denominator = (-payoff[0][0] + payoff[0][1] + payoff[1][0] - payoff[1][1])
-    a_1 = (payoff[1][0] - payoff[1][1] - payoff[2][0] + payoff[2][1]) / denominator
-    a_2 = (-payoff[0][0] + payoff[0][1] + payoff[2][0] - payoff[2][1]) / denominator
-    b_1 = (payoff[1][0] - payoff[1][1]) / denominator
-    b_2 = (-payoff[0][0] + payoff[0][1]) / denominator
-    y = (-payoff[0][1] + payoff[1][1]) / (-denominator)
+    denominator = (-utility[0][0] + utility[0][1] + utility[1][0] - utility[1][1])
+    a_1 = (utility[1][0] - utility[1][1] - utility[2][0] + utility[2][1]) / denominator
+    a_2 = (-utility[0][0] + utility[0][1] + utility[2][0] - utility[2][1]) / denominator
+    b_1 = (utility[1][0] - utility[1][1]) / denominator
+    b_2 = (-utility[0][0] + utility[0][1]) / denominator
+    y = (-utility[0][1] + utility[1][1]) / (-denominator)
 
     # x_3 == 0
     if (b_1 >= 0 and b_1 <= 1) and (b_2 >= 0 and b_2 <= 1):
@@ -34,8 +34,8 @@ def calc_lines_end_points(payoff):
     return lines_end_points
 
 
-def calc_equilibrium_point(payoff_array):
-    game = nashpy.Game(payoff_array, payoff_array * -1)
+def calc_equilibrium_point(utility):
+    game = nashpy.Game(utility, utility * -1)
     equilibrias = game.support_enumeration()
     for eq in equilibrias:
         return eq
@@ -76,21 +76,21 @@ def triangle_plot(trajectory_value, file_name, title, equilibrium_point=None, li
     plt.close()
 
 
-def triangle_plot_per_seed(dir_path, p_id, payoff_array):
+def triangle_plot_per_seed(dir_path, p_id, utility):
     lines_end_points = None
-    if payoff_array.shape[0] == payoff_array.shape[1]:
-        equilibrium_points = calc_equilibrium_point(payoff_array)
-    elif payoff_array.shape[0] == 3 and payoff_array.shape[1] == 2:
-        lines_end_points = calc_lines_end_points(payoff_array)
+    if utility.shape[0] == utility.shape[1]:
+        equilibrium_points = calc_equilibrium_point(utility)
+    elif utility.shape[0] == 3 and utility.shape[1] == 2:
+        lines_end_points = calc_lines_end_points(utility)
         equilibrium_points = (lines_end_points[0][0] + lines_end_points[1][0]) / 2, lines_end_points[0][1]
-    elif payoff_array.shape[0] == 2 and payoff_array.shape[1] == 3:
-        lines_end_points = calc_lines_end_points(payoff_array.T)
+    elif utility.shape[0] == 2 and utility.shape[1] == 3:
+        lines_end_points = calc_lines_end_points(utility.T)
         equilibrium_points = (lines_end_points[0][0] + lines_end_points[1][0]) / 2, lines_end_points[0][1]
     else:
-        print('invaild payoff')
+        print('invaild utility matrix')
         return
     for i_s in range(2):
-        if payoff_array.shape[i_s] == 3 and equilibrium_points:
+        if utility.shape[i_s] == 3 and equilibrium_points:
             lines_end_point = None
             if lines_end_points:
                 lines_end_point = [lines_end_points_[i_s] for lines_end_points_ in lines_end_points]

@@ -2,9 +2,12 @@ import numpy as np
 
 
 class FTRL(object):
-    def __init__(self, eta, n_actions):
-        self.n_actions = n_actions
-        self.policy = np.ones(n_actions) / n_actions
+    def __init__(self, n_actions, random_initial_policy, eta):
+        if random_initial_policy:
+            self.policy = np.random.exponential(scale=1.0, size=n_actions)
+            self.policy /= self.policy.sum()
+        else:
+            self.policy = np.ones(n_actions) / n_actions
         self.eta = eta
         self.sum_policy = np.zeros(n_actions)
         self.time_average_policy = self.policy
@@ -21,5 +24,3 @@ class FTRL(object):
         self.policy = exp_utility / exp_utility.sum()
         self.sum_policy += self.policy
         self.time_average_policy = self.sum_policy / self.sum_policy.sum()
-
-

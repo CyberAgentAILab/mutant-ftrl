@@ -4,8 +4,8 @@ from algorithms.ftrl import FTRL
 
 
 class OFTRL(FTRL):
-    def __init__(self, eta, n_actions):
-        super().__init__(eta, n_actions)
+    def __init__(self, n_actions, random_initial_policy, eta):
+        super().__init__(n_actions, random_initial_policy, eta)
         self.prediction_vec = np.zeros(n_actions)
         self.past_utility = np.zeros(n_actions)
 

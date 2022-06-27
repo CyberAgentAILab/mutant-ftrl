@@ -9,7 +9,7 @@ def run_ftrl(p_id, game, agents, n_iterations, logger, feedback='full', random_p
     index = []
     if random_policy:
         for i_a, agent in enumerate(agents):
-            agent.policy = random_init_policy(game.payoff.shape[i_a])
+            agent.policy = random_init_policy(game.utility.shape[i_a])
     for i_t in np.arange(0, n_iterations + 1):
         if feedback == 'full':
             policies = [agent.policy for agent in agents]
