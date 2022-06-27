@@ -5,8 +5,8 @@ from collections import defaultdict
 
 
 class Logger(defaultdict):
-    def __init__(self):
-        super().__init__(list)
+    def __init__(self, instance_type=list):
+        super().__init__(instance_type)
 
     def to_dataframe(self):
         df = pd.DataFrame()

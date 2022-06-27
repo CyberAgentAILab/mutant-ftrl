@@ -14,7 +14,7 @@ class OFTRL(FTRL):
         self.policy = exp_utility / exp_utility.sum()
         self.past_utility = utility
         self.sum_policy += self.policy
-        self.time_average_policy = self.sum_policy / self.sum_policy.sum()
+        self.average_iterate_policy = self.sum_policy / self.sum_policy.sum()
 
     def update_bandit(self, utility, action):
         utility[action] = 1 - utility[action]
@@ -22,4 +22,4 @@ class OFTRL(FTRL):
         self.past_utility = 1 - utility / self.policy[action]
         self.policy = values / values.sum()
         self.sum_policy += self.policy
-        self.time_average_policy = self.sum_policy / self.sum_policy.sum()
+        self.average_iterate_policy = self.sum_policy / self.sum_policy.sum()

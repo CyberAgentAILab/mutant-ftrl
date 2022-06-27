@@ -19,7 +19,7 @@ class MFTRL(FTRL):
         self.t += 1
         self.policy = values / values.sum()
         self.sum_policy += self.policy
-        self.time_average_policy = self.sum_policy / self.sum_policy.sum()
+        self.average_iterate_policy = self.sum_policy / self.sum_policy.sum()
 
     def update_bandit(self, utility, action):
         values = np.exp(
@@ -29,7 +29,7 @@ class MFTRL(FTRL):
         self.t += 1
         self.policy = values / values.sum()
         self.sum_policy += self.policy
-        self.time_average_policy = self.sum_policy / self.sum_policy.sum()
+        self.average_iterate_policy = self.sum_policy / self.sum_policy.sum()
 
     def _update_ref_strategy(self):
         if self.t > 0 and self.update_freq > 0 and self.t % self.update_freq == 0:

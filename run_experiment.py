@@ -1,6 +1,5 @@
 import argparse
 import os
-import visualization
 
 from algorithms import *
 from concurrent.futures import ProcessPoolExecutor
@@ -24,9 +23,14 @@ def run_exp(num_trials, game, T, seed, feedback, algs):
         utils.set_random_seed(seed)
 
         # run each algorithm
+        logs = [None] * num_trials
         with ProcessPoolExecutor() as pool:
-            pool.map(run_ftrl, *tuple(zip(*[[p_id, game, T, feedback, alg, params, dir_name] for p_id in range(num_trials)])))
-        visualization.final_summary(dir_name, num_trials)
+            arguments = [[trial_id, game, T, feedback, alg, params] for trial_id in range(num_trials)]
+            for trial_id, log in enumerate(pool.map(run_ftrl, *tuple(zip(*arguments)))):
+                logs[trial_id] = log
+
+        # save log
+        utils.save_and_summary_results(dir_name, logs)
 
 
 def main():
