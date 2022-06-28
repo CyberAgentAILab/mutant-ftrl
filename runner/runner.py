@@ -16,28 +16,31 @@ def run_ftrl(trial_id, game, T, feedback, alg, params):
         alg(game.num_actions(1), **params)
     ]
 
+    # run each trial
     logger = Logger()
-    for i_t in np.arange(T + 1):
+    for t in np.arange(T + 1):
         if feedback == 'full':
-            policies = [player.policy for player in players]
+            policies = [player.strategy for player in players]
             utilities = game.full_feedback(policies)
             for i_a, player in enumerate(players):
                 player.update(utilities[i_a])
         elif feedback == 'bandit':
-            policies = [player.policy for player in players]
+            policies = [player.strategy for player in players]
             utilities, actions = game.bandit_feedback(policies)
             for i_a, player in enumerate(players):
                 player.update_bandit(utilities[i_a], actions[i_a])
         else:
             raise RuntimeError('illegal feedback type')
         for p in range(len(players)):
-            logger['player{}_strategy'.format(p)].append(players[p].policy.copy())
-            logger['player{}_average_strategy'.format(p)].append(players[p].average_iterate_policy.copy())
-        average_iterate_policies = [player.average_iterate_policy for player in players]
-        logger['last_iterate_exploitability'].append(game.calc_exploitability(policies))
-        logger['average_iterate_exploitability'].append(game.calc_exploitability(average_iterate_policies))
-        if i_t > 0 and i_t % int(10e5) == 0:
-            if trial_id % 10 == 0:
-                print('trial_id', trial_id, ":", i_t, "iterations finished.")
+            logger['player{}_strategy'.format(p)].append(players[p].strategy.copy())
+            logger['player{}_average_strategy'.format(p)].append(players[p].average_iterate_strategy.copy())
+        average_iterate_policies = [player.average_iterate_strategy for player in players]
+        last_iterate_exploitability = game.calc_exploitability(policies)
+        avearge_iterate_exploitability = game.calc_exploitability(average_iterate_policies)
+        logger['last_iterate_exploitability'].append(last_iterate_exploitability)
+        logger['average_iterate_exploitability'].append(avearge_iterate_exploitability)
+        if t % 1000 == 0:
+            print('trial: {}, iteration: {}, last-iterate exploitability: {}, average-iterate exploitabiltiy: {}'
+                  .format(trial_id, t, last_iterate_exploitability, avearge_iterate_exploitability))
     print('Finish seed {}'.format(trial_id))
     return logger

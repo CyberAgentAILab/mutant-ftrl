@@ -41,14 +41,14 @@ def main():
     parser.add_argument('--T', type=int, default=1000, help='number of iterations')
     parser.add_argument('--feedback', type=str, default='full', choices=['full', 'bandit'], help="feedback type")
     parser.add_argument('--seed', type=int, default=0, help="random seed")
-    parser.add_argument('--random_init_policy', action='store_true', help='whether to initialize the initial strategy randomly')
+    parser.add_argument('--random_init_strategy', action='store_true', help='whether to initialize the initial strategy randomly')
     args = parser.parse_args()
 
     # define algorithms
     algs = [
-        (FTRL, {'random_initial_policy': args.random_init_policy, 'eta': 0.1}),
-        (OFTRL, {'random_initial_policy': args.random_init_policy, 'eta': 0.1}),
-        (MFTRL, {'random_initial_policy': args.random_init_policy, 'eta': 0.1, 'mu': 0.01, 'update_freq': 0}),
+        (FTRL, {'random_initial_strategy': args.random_init_strategy, 'eta': 0.1}),
+        (OFTRL, {'random_initial_strategy': args.random_init_strategy, 'eta': 0.1}),
+        (MFTRL, {'random_initial_strategy': args.random_init_strategy, 'eta': 0.1, 'mu': 0.01, 'update_freq': 0}),
     ]
 
     # run experiments
