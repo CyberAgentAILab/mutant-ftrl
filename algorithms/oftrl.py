@@ -10,8 +10,8 @@ class OFTRL(FTRL):
         self.past_utility = np.zeros(n_actions)
 
     def update(self, utility):
-        exp_utility = np.exp(self.eta * (2 * utility - self.past_utility)) * self.strategy
-        self.strategy = exp_utility / exp_utility.sum()
+        values = np.exp(self.eta * (2 * utility - self.past_utility)) * self.strategy
+        self.strategy = values / values.sum()
         self.past_utility = utility
         self.sum_strategy += self.strategy
         self.average_iterate_strategy = self.sum_strategy / self.sum_strategy.sum()

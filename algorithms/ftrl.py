@@ -13,14 +13,14 @@ class FTRL(object):
         self.average_iterate_strategy = self.strategy
 
     def update(self, utility):
-        exp_utility = np.exp(self.eta * utility) * self.strategy
-        self.strategy = exp_utility / exp_utility.sum()
+        values = np.exp(self.eta * utility) * self.strategy
+        self.strategy = values / values.sum()
         self.sum_strategy += self.strategy
         self.average_iterate_strategy = self.sum_strategy / self.sum_strategy.sum()
 
     def update_bandit(self, utility, action):
         utility[action] = 1 - utility[action]
-        exp_utility = np.exp(self.eta * (1 - utility / self.strategy[action])) * self.strategy
-        self.strategy = exp_utility / exp_utility.sum()
+        values = np.exp(self.eta * (1 - utility / self.strategy[action])) * self.strategy
+        self.strategy = values / values.sum()
         self.sum_strategy += self.strategy
         self.average_iterate_strategy = self.sum_strategy / self.sum_strategy.sum()
