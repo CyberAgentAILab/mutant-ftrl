@@ -38,10 +38,10 @@ def main():
     parser.add_argument('--game', default='biased_rps', type=str,
                         choices=['biased_rps', 'm_eq', *['random_utility/size{}'.format(s) for s in [2, 3, 5, 10, 50, 100]]], help='name of game')
     parser.add_argument('--num_trials', type=int, default=1, help="number of trials to run experiments")
-    parser.add_argument('--T', type=int, default=1000, help='number of iterations')
+    parser.add_argument('--T', type=int, default=10000, help='number of iterations')
     parser.add_argument('--feedback', type=str, default='full', choices=['full', 'bandit'], help="feedback type")
     parser.add_argument('--seed', type=int, default=0, help="random seed")
-    parser.add_argument('--random_init_strategy', action='store_true', help='whether to initialize the initial strategy randomly')
+    parser.add_argument('--random_init_strategy', action='store_true', help='whether to generate the initial strategy uniformly at random')
     args = parser.parse_args()
 
     # define algorithms
