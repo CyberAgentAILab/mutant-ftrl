@@ -42,5 +42,4 @@ def run_ftrl(trial_id, game, T, feedback, alg, params):
         if t % 1000 == 0:
             print('trial: {}, iteration: {}, last-iterate exploitability: {}, average-iterate exploitabiltiy: {}'
                   .format(trial_id, t, last_iterate_exploitability, avearge_iterate_exploitability))
-    print('Finish seed {}'.format(trial_id))
     return logger

@@ -48,7 +48,7 @@ def main():
     algs = [
         (FTRL, {'random_initial_strategy': args.random_init_strategy, 'eta': 0.1}),
         (OFTRL, {'random_initial_strategy': args.random_init_strategy, 'eta': 0.1}),
-        (MFTRL, {'random_initial_strategy': args.random_init_strategy, 'eta': 0.1, 'mu': 0.01, 'update_freq': 0}),
+        (MFTRL, {'random_initial_strategy': args.random_init_strategy, 'eta': 0.1, 'mu': 0.01, 'update_freq': 4000}),
     ]
 
     # run experiments
