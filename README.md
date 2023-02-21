@@ -1,5 +1,5 @@
 # Mutation-Driven Follow the Regularized Leader for Last-Iterate Convergence in Zero-Sum Games
-Code for reproducing results in the paper "Mutation-Driven Follow the Regularized Leader for Last-Iterate Convergence in Zero-Sum Games".
+Code for reproducing results in the paper "[Mutation-Driven Follow the Regularized Leader for Last-Iterate Convergence in Zero-Sum Games](https://proceedings.mlr.press/v180/abe22a.html)".
 
 ## About
 In this study, we consider a variant of the Follow the Regularized Leader (FTRL) dynamics in two-player zero-sum games.
