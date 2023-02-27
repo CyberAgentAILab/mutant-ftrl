@@ -5,9 +5,9 @@ from runner import utils
 from runner.logger import Logger
 
 
-def run_ftrl(trial_id, game, T, feedback, alg, params):
+def run_ftrl(trial_id, game, T, seed, feedback, alg, params):
     # set random seed
-    utils.set_random_seed(trial_id)
+    utils.set_random_seed(seed)
 
     # initialize game and players
     game = MatrixGame(utils.load_utility_matrix(game, trial_id))
@@ -37,9 +37,11 @@ def run_ftrl(trial_id, game, T, feedback, alg, params):
         average_iterate_policies = [player.average_iterate_strategy for player in players]
         last_iterate_exploitability = game.calc_exploitability(policies)
         avearge_iterate_exploitability = game.calc_exploitability(average_iterate_policies)
-        logger['last_iterate_exploitability'].append(last_iterate_exploitability)
-        logger['average_iterate_exploitability'].append(avearge_iterate_exploitability)
-        if t % 1000 == 0:
+        if t < 100 or t % max(1, T / int(1e6)) == 0:
+            logger['iteration'].append(t)
+            logger['last_iterate_exploitability'].append(last_iterate_exploitability)
+            logger['average_iterate_exploitability'].append(avearge_iterate_exploitability)
+        if t % 10000 == 0:
             print('trial: {}, iteration: {}, last-iterate exploitability: {}, average-iterate exploitabiltiy: {}'
                   .format(trial_id, t, last_iterate_exploitability, avearge_iterate_exploitability))
     return logger

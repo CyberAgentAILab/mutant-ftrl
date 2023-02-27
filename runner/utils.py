@@ -38,19 +38,21 @@ def save_and_summary_results(dir_name, logs):
     average_iterate_exploitability_df = pd.concat(average_iterate_exploitability_dfs, axis=1)
 
     # save mean exploitability
-    df = pd.concat([exploitability_df.mean(axis='columns'),
+    df = pd.concat([logs[0].to_dataframe()['iteration'],
+                    exploitability_df.mean(axis='columns'),
                     average_iterate_exploitability_df.mean(axis='columns')], axis=1)
     df.index.name = '#index'
-    df.columns = ['last_iterate_exploitability', 'average_iterate_exploitability']
-    df.to_csv("{}/csv/exploitability_mean.csv".format(dir_name))
+    df.columns = ['iteration', 'last_iterate_exploitability', 'average_iterate_exploitability']
+    df.to_csv('{}/csv/exploitability_mean.csv'.format(dir_name))
 
     # plot mean exploitability
-    plt.plot(df, label=['Last-Iterate Exploitability', 'Average-Iterate Exploitability'])
+    plt.plot(df['iteration'], df[['last_iterate_exploitability', 'average_iterate_exploitability']],
+             label=['Last-Iterate Exploitability', 'Average-Iterate Exploitability'])
     plt.xlabel('Iterations')
     plt.ylabel('Exploitability')
     plt.yscale('log')
     plt.xscale('log')
     plt.grid(ls='--')
     plt.legend()
-    plt.savefig("{}/figure/exploitability_mean.pdf".format(dir_name))
+    plt.savefig('{}/figure/exploitability_mean.pdf'.format(dir_name))
     plt.close()

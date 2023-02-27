@@ -1,4 +1,5 @@
 import argparse
+import numpy as np
 import os
 
 from algorithms import *
@@ -25,7 +26,7 @@ def run_exp(num_trials, game, T, seed, feedback, algs):
         # run each algorithm
         logs = [None] * num_trials
         with ProcessPoolExecutor() as pool:
-            arguments = [[trial_id, game, T, feedback, alg, params] for trial_id in range(num_trials)]
+            arguments = [[trial_id, game, T, np.random.randint(0, 2 ** 32), feedback, alg, params] for trial_id in range(num_trials)]
             for trial_id, log in enumerate(pool.map(run_ftrl, *tuple(zip(*arguments)))):
                 logs[trial_id] = log
 
@@ -37,18 +38,18 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--game', default='biased_rps', type=str,
                         choices=['biased_rps', 'm_eq', *['random_utility/size{}'.format(s) for s in [2, 3, 5, 10, 50, 100]]], help='name of game')
-    parser.add_argument('--num_trials', type=int, default=1, help="number of trials to run experiments")
+    parser.add_argument('--num_trials', type=int, default=1, help='number of trials to run experiments')
     parser.add_argument('--T', type=int, default=10000, help='number of iterations')
-    parser.add_argument('--feedback', type=str, default='full', choices=['full', 'bandit'], help="feedback type")
-    parser.add_argument('--seed', type=int, default=0, help="random seed")
+    parser.add_argument('--feedback', type=str, default='full', choices=['full', 'bandit'], help='feedback type')
+    parser.add_argument('--seed', type=int, default=0, help='random seed')
     parser.add_argument('--random_init_strategy', action='store_true', help='whether to generate the initial strategy uniformly at random')
     args = parser.parse_args()
 
     # define algorithms
     algs = [
-        (FTRL, {'random_initial_strategy': args.random_init_strategy, 'eta': 0.1}),
-        (OFTRL, {'random_initial_strategy': args.random_init_strategy, 'eta': 0.1}),
-        (MFTRL, {'random_initial_strategy': args.random_init_strategy, 'eta': 0.1, 'mu': 0.01, 'update_freq': 4000}),
+        (FTRL, {'random_init_strategy': args.random_init_strategy, 'eta': 0.1}),
+        (OFTRL, {'random_init_strategy': args.random_init_strategy, 'eta': 0.1}),
+        (MFTRL, {'random_init_strategy': args.random_init_strategy, 'eta': 0.1, 'mu': 0.01, 'update_freq': 4000}),
     ]
 
     # run experiments
@@ -56,5 +57,5 @@ def main():
     run_exp(args.num_trials, args.game, args.T, args.seed, args.feedback, algs)
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     main()

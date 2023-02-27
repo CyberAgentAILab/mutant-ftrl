@@ -2,8 +2,8 @@ import numpy as np
 
 
 class FTRL(object):
-    def __init__(self, n_actions, random_initial_strategy, eta):
-        if random_initial_strategy:
+    def __init__(self, n_actions, random_init_strategy, eta):
+        if random_init_strategy:
             self.strategy = np.random.exponential(scale=1.0, size=n_actions)
             self.strategy /= self.strategy.sum()
         else:
