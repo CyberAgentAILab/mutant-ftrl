@@ -42,3 +42,16 @@ To evaluate M-FTRL via an experiment in biased Rock-Paper-Scissors under bandit 
 ```bash
 $ python run_experiment.py --feedback=bandit
 ```
+
+## Citation
+If you use our code in your work, please cite our paper:
+```
+@InProceedings{abe22mftrl,
+  title = 	 {Mutation-driven follow the regularized leader for last-iterate convergence in zero-sum games},
+  author =       {Abe, Kenshi and Sakamoto, Mitsuki and Iwasaki, Atsushi},
+  booktitle = 	 {Proceedings of the Thirty-Eighth Conference on Uncertainty in Artificial Intelligence},
+  pages = 	 {1--10},
+  year = 	 {2022},
+  volume = 	 {180},
+}
+```
