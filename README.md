@@ -52,6 +52,6 @@ If you use our code in your work, please cite our paper:
   booktitle = 	 {Proceedings of the Thirty-Eighth Conference on Uncertainty in Artificial Intelligence},
   pages = 	 {1--10},
   year = 	 {2022},
-  volume = 	 {180},
+  volume = 	 {180}
 }
 ```
